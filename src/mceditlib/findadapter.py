@@ -42,6 +42,7 @@ def findAdapter(filename, readonly=False, resume=None, getInfo=False):
     """
     # from mceditlib.indev import IndevLevel
     from mceditlib.anvil.adapter import AnvilWorldAdapter
+    from mceditlib.anvil.modern_adapter import ModernWorldAdapter
     # from mceditlib.java import JavaLevel
     # from mceditlib.pocket import PocketWorldAdapter
     from mceditlib.schematic import SchematicFileAdapter
@@ -51,7 +52,7 @@ def findAdapter(filename, readonly=False, resume=None, getInfo=False):
 
     log.debug("Identifying %s", filename)
 
-    classes = [AnvilWorldAdapter, SchematicFileAdapter]
+    classes = [ModernWorldAdapter, AnvilWorldAdapter, SchematicFileAdapter]
     for cls in classes:
         log.debug("%s: Attempting", cls.__name__)
         if isLevel(cls, filename):

@@ -198,11 +198,14 @@ class RevisionHistory(object):
         :return:
         :rtype:
         """
+        if getattr(self, "_closed", False):
+            return
+        self._closed = True
         for node in self.nodes:
             node.worldFolder.close()
-            self.nodes = []
+        self.nodes = []
         log.info("Removing undo folder %r", self.tempFolder)
-        shutil.rmtree(self.tempFolder)
+        shutil.rmtree(self.tempFolder, ignore_errors=True)
         self.readonly = True
 
     def _createRevisionFolder(self):

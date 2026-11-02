@@ -143,8 +143,10 @@ class SortedSet(MutableSet):
 class BlockTypeSet(object):
     defaultColor = (0xc9, 0x77, 0xf0, 0xff)
 
-    def __init__(self, defaultName="Unused Block", idMapping=None):
+    def __init__(self, defaultName="Unused Block", idMapping=None, idLimit=None):
         object.__init__(self)
+        idLimit = idLimit or id_limit
+        self.id_limit = idLimit
         self.allBlocks = SortedSet()
 
         self.blockJsons = {}
@@ -181,28 +183,28 @@ class BlockTypeSet(object):
 
         self.aka = defaultdict(lambda: "")
 
-        self.useNeighborBrightness = numpy.zeros(id_limit, dtype='uint8')
+        self.useNeighborBrightness = numpy.zeros(idLimit, dtype='uint8')
         self.useNeighborBrightness[:] = self.defaults['useNeighborBrightness']
 
-        self.brightness = numpy.zeros(id_limit, dtype='uint8')
+        self.brightness = numpy.zeros(idLimit, dtype='uint8')
         self.brightness[:] = self.defaults['brightness']
 
-        self.opacity = numpy.zeros(id_limit, dtype='uint8')
+        self.opacity = numpy.zeros(idLimit, dtype='uint8')
         self.opacity[:] = self.defaults['opacity']
 
-        self.renderColor = numpy.zeros((id_limit, 16, 3), dtype='uint8')
+        self.renderColor = numpy.zeros((idLimit, 16, 3), dtype='uint8')
         self.renderColor[:] = 0xFF
 
-        self.mapColor = numpy.zeros((id_limit, 16, 3), dtype='uint8')
+        self.mapColor = numpy.zeros((idLimit, 16, 3), dtype='uint8')
         self.mapColor[:] = 0xFF
 
-        self.opaqueCube = numpy.ones((id_limit, ), dtype='uint8')
+        self.opaqueCube = numpy.ones((idLimit, ), dtype='uint8')
         self.opaqueCube[0] = 0
 
-        self.normalCube = numpy.ones((id_limit, ), dtype='uint8')
+        self.normalCube = numpy.ones((idLimit, ), dtype='uint8')
         self.normalCube[0] = 0
 
-        self.materialLiquid = numpy.zeros((id_limit, ), dtype='uint8')
+        self.materialLiquid = numpy.zeros((idLimit, ), dtype='uint8')
 
         self.name = "Unnamed Set"
         self.namePrefix = "minecraft:"
