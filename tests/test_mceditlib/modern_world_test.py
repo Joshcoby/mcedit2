@@ -72,3 +72,27 @@ def test_block_properties_guess(tmpdir):
     assert bt.opacity[bt["glowstone"].ID] == 15
     assert len(bt.opacity) == 65536
     world.close()
+
+
+def test_fill_and_light_roundtrip(tmpdir):
+    from mceditlib.selection import BoundingBox
+    path = makeWorld(tmpdir)
+    world = WorldEditor(path, adapterClass=ModernWorldAdapter)
+    dim = world.getDimension()
+    for cx in range(2):
+        for cz in range(2):
+            dim.createChunk(cx, cz)
+    stone = world.blocktypes["stone"]
+    glow = world.blocktypes["glowstone"]
+    dim.fillBlocks(BoundingBox((0, 0, 0), (32, 40, 32)), stone)
+    dim.fillBlocks(BoundingBox((5, 10, 5), (1, 1, 1)), glow)
+    world.saveChanges()
+    world.close()
+
+    world = WorldEditor(path, adapterClass=ModernWorldAdapter)
+    dim = world.getDimension()
+    assert dim.getBlock(5, 10, 5).internalName == "minecraft:glowstone"
+    assert dim.getBlock(1, 1, 1).internalName == "minecraft:stone"
+    assert dim.getBlock(1, 50, 1).internalName == "minecraft:air"
+    assert dim.getChunk(0, 0).chunkData.getSection(0).BlockLight.max() == 15
+    world.close()
